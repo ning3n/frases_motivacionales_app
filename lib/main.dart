@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 import 'package:frases_motivacionales_app/screens/motivational_screen.dart';
 
