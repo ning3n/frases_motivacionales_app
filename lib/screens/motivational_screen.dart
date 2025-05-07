@@ -16,13 +16,27 @@ class _MotivationalScreenState extends State<MotivationalScreen> {
     "Respira, sonríe y sigue adelante.",
     "Lo importante es ser mejor que el tu de ayer."
   ];
-
+  double _opacidad = 1.0;
   String fraseActual = "Generador de frases";
 
-  void generarFrase(){
+  void generarFrase() async{
+    // 1. Bajar opacidad
+    setState(() {
+      _opacidad = 0.0;
+    });
+
+    // 2. Esperar la animación (debe coincidir con duration del AnimatedOpacity)
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // 3. Cambiar la frase
     final random = Random();
     setState(() {
       fraseActual = frases[random.nextInt(frases.length)];
+    });
+
+    // 4. Volver a mostrarla
+    setState(() {
+      _opacidad = 1.0;
     });
   }
 
@@ -40,12 +54,19 @@ class _MotivationalScreenState extends State<MotivationalScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              fraseActual,
-              style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.center,
+            Expanded(
+              child: Center(
+                child: AnimatedOpacity(
+                  opacity: _opacidad, 
+                  duration: const Duration(milliseconds: 500),
+                  child: Text(
+                    fraseActual,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             ),
-            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: generarFrase,
               style: ElevatedButton.styleFrom(
